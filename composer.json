@@ -1,5 +1,5 @@
 {
-    "name": "Cybergenics/heureka-overeno-php-api",
+    "name": "cybergenics/heureka-overeno-php-api",
     "type": "library",
     "license": "BSD-3-Clause",
     "description": "Library providing support for Heureka.cz Overeno service",
