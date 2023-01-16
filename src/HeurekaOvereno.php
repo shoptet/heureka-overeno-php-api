@@ -166,7 +166,7 @@ class HeurekaOvereno
      * @param string $url URL
      * @return string Response body
      */
-    private function sendRequest($url)
+    protected function sendRequest($url)
     {
         $parsed = parse_url($url);
         $fp = fsockopen($parsed['host'], 80, $errno, $errstr, 5);
