@@ -168,24 +168,21 @@ class HeurekaOvereno
      */
     protected function sendRequest($url)
     {
-        $parsed = parse_url($url);
-        $fp = fsockopen($parsed['host'], 80, $errno, $errstr, 5);
-        if (!$fp) {
-            throw new HeurekaOverenoException($errstr . ' (' . $errno . ')');
-        } else {
-            $return = '';
-            $out = "GET " . $parsed['path'] . "?" . $parsed['query'] . " HTTP/1.1\r\n" .
-                    "Host: " . $parsed['host'] . "\r\n" .
-                    "Connection: Close\r\n\r\n";
-            fputs($fp, $out);
-            while (!feof($fp)) {
-                $return .= fgets($fp, 128);
-            }
-            fclose($fp);
-            $returnParsed = explode("\r\n\r\n", $return);
+        $curl = curl_init($url);
+        curl_setopt_array($curl, [
+            CURLOPT_RETURNTRANSFER => FALSE,
+            CURLOPT_TIMEOUT => 5,
+        ]);
 
-            return empty($returnParsed[1]) ? '' : trim($returnParsed[1]);
+        $return = curl_exec($curl);
+        if ($return === FALSE) {
+            throw new HeurekaOverenoException(sprintf('cURL error: [%d] %s', curl_errno($curl), curl_error($curl)));
         }
+        curl_close($curl);
+
+        $returnParsed = explode("\r\n\r\n", $return);
+
+        return empty($returnParsed[1]) ? '' : trim($returnParsed[1]);
     }
 
     /**
